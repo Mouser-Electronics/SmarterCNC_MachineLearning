@@ -23,6 +23,7 @@
 /* Includes ---------------------------------------------------------------- */
 #include <SmarterCNC_inferencing.h>
 #include <Arduino_LSM9DS1.h>
+//#include <SparkFunLSM6DSO.h>
 
 /* Constant defines -------------------------------------------------------- */
 #define CONVERT_G_TO_MS2    9.80665f
@@ -135,7 +136,11 @@ void run_inference_background()
         }
         ei_printf("]\n");
 
-        delay(run_inference_every_ms);
+        if(strcmp(prediction, "Error") == 0) {
+          handle_error_detection();
+        }
+
+        //delay(run_inference_every_ms);
     }
 
     ei_classifier_smooth_free(&smooth);
@@ -176,3 +181,9 @@ void loop()
 #if !defined(EI_CLASSIFIER_SENSOR) || EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_ACCELEROMETER
 #error "Invalid model for current sensor"
 #endif
+
+
+
+void handle_error_detection() {
+  ei_printf("Error detected!\n");
+}
